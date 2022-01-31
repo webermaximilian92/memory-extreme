@@ -1,0 +1,92 @@
+<h1 class="tw-text-4xl tw-mb-5">Memory Challenge</h1>
+
+<p class="tw-italic">
+  Merke Dir 2-5 Muster und gebe diese anschließend schnell ein.
+</p>
+
+<button
+  *ngIf="!_startGame"
+  (click)="enew()"
+  [disabled]="_showCounter"
+  class="tw-bg-teal-600 tw-p-3 tw-my-10 tw-mr-3 tw-text-yellow-50"
+>
+  Starten
+</button>
+<br />
+
+<div
+  *ngIf="_showCounter && _showMainCounter"
+  class="tw-top-0 tw-left-0 tw-fixed tw-h-full tw-w-full tw-bg-green-50"
+>
+  <div class="counter">
+    <span class="bubble"></span>
+    <span class="number">{{ _timerSeconds }}</span>
+  </div>
+</div>
+
+<div *ngIf="!_showSolver && _showCounter && !_showMainCounter">
+  <div class="counter counter--small">
+    <span class="bubble bubble--small"></span>
+    <span class="number number--small">{{ _timerSeconds }}</span>
+  </div>
+</div>
+
+<div *ngIf="!_showSolver && _startGame" class="tw-mb-12">
+  <h2 class="tw-pt-16">Merke Dir folgende Muster:</h2>
+  <p>
+    Runde: {{ currentIndexes[0] + 1 }} / {{ generatedWaveGroups.length }}
+    <br />
+    Muster: {{ currentIndexes[1] + 1 }} /
+    {{ generatedWaveGroups[currentIndexes[0]].length }}
+  </p>
+  <ng-container
+    *ngFor="let wave of generatedWaveGroups; let iWaveGroup = index"
+  >
+    <ng-container *ngFor="let grid of wave; let iGrid = index">
+      <p
+        class=" {{
+          isCurrentGridActive(iWaveGroup, iGrid)
+            ? 'tw-inline-grid'
+            : 'tw-hidden'
+        }}"
+      ></p>
+      <div
+        class="wave tw-border tw-border-neutral-900 tw-mt-12 {{
+          isCurrentGridActive(iWaveGroup, iGrid)
+            ? 'tw-inline-grid'
+            : 'tw-hidden'
+        }}"
+      >
+        <span
+          *ngFor="let invalidCamber of cambers"
+          class="tw-w-10 tw-h-10 tw-block tw-border tw-border-neutral-900 {{
+            getCellStatus(invalidCamber, grid)
+          }} "
+        >
+        </span>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
+
+<div *ngIf="_showSolver && _startGame" class="tw-mb-12">
+  <p class="tw-mt-32">Deine Lösung für Muster {{ solverIndex + 1 }}</p>
+  <div
+    class="wave tw-border tw-border-neutral-900 tw-mt-10 tw-inline-grid {{
+      _hideResolver ? 'tw-invisible' : ''
+    }}"
+  >
+    <button
+      *ngFor="let invalidCamber of cambers; let camberIndex = index"
+      (click)="resolveValue(camberIndex)"
+      class="disable-dbl-tap-zoom tw-w-10 tw-h-10 tw-block tw-border tw-border-neutral-900"
+      [ngClass]="{ 'tw-bg-sky-500': resolvedCambers.includes(camberIndex) }"
+    ></button>
+  </div>
+  <div *ngIf="_showCounter && !_showMainCounter" class="tw-relative">
+    <div class="counter counter--small">
+      <span class="bubble bubble--small bubble--red"></span>
+      <span class="number number--small">{{ _timerSeconds }}</span>
+    </div>
+  </div>
+</div>

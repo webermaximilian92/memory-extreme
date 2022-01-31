@@ -1,0 +1,80 @@
+$counterWidth: 200px;
+$smallFactor: 0.5;
+
+.wave {
+  grid-template-columns: 40px 40px 40px;
+  grid-template-rows: 40px 40px 40px;
+}
+
+.counter {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: $counterWidth;
+  height: $counterWidth;
+  border: 5px solid black;
+  position: absolute;
+  border-radius: 50%;
+
+  &--small {
+    left: 250px;
+    top: -60px;
+    width: $counterWidth * $smallFactor;
+    height: $counterWidth * $smallFactor;
+  }
+}
+
+.bubble {
+  height: 40px;
+  width: 40px;
+  background: green;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  margin: auto;
+  animation: circle 1s ease-in-out infinite;
+
+  &--small {
+    animation: circle-small 1s ease-in-out infinite;
+  }
+
+  &--red {
+    background: red;
+  }
+}
+
+.number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: $counterWidth * 0.5;
+
+  &--small {
+    font-size: $counterWidth * 0.5 * $smallFactor;
+  }
+}
+
+@keyframes circle {
+  0% {
+    transform: rotate(90deg) translate(-$counterWidth * 0.5) rotate(0deg);
+  }
+  100% {
+    transform: rotate(450deg) translate(-$counterWidth * 0.5) rotate(-360deg);
+  }
+}
+
+@keyframes circle-small {
+  0% {
+    transform: rotate(90deg) translate(-$counterWidth * 0.5 * $smallFactor)
+      rotate(0deg);
+  }
+  100% {
+    transform: rotate(450deg) translate(-$counterWidth * 0.5 * $smallFactor)
+      rotate(-360deg);
+  }
+}

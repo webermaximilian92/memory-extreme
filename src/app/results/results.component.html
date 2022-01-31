@@ -1,0 +1,54 @@
+<p>Deine bisher beste Runde: {{ bestRun }}</p>
+<p class="tw-mt-12">Deine Punktzahl: {{ validSum }} / {{ gridsSum }}</p>
+
+<div class="tw-flex tw-mt-20">
+  <div class="tw-mr-5 tw-w-1/2">
+    <h2 class="tw-mb-5 tw-whitespace-nowrap tw-text-sm">Deine Eingaben:</h2>
+    <ng-container *ngFor="let waves of resolvedWaves; let i = index">
+      <div
+        *ngIf="waves.length"
+        class="tw-flex tw-flex-wrap tw-border-b tw-border-neutral-900 tw-mb-14"
+      >
+        <p class="tw-w-full tw-mb-3">
+          {{ validWaves[i] }} / {{ generatedWaveGroups[i].length }}
+        </p>
+        <div
+          *ngFor="let grid of waves"
+          class="wave tw-grid tw-border tw-border-neutral-900 tw-mb-3 tw-mr-3"
+        >
+          <span
+            *ngFor="let invalidCamber of cambers"
+            class="tw-w-3 tw-h-3 tw-block tw-border tw-border-neutral-900 {{
+              getCellStatus(invalidCamber, grid)
+            }} "
+          >
+          </span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="tw-ml-5 tw-w-1/2">
+    <h2 class="tw-mb-5 tw-whitespace-nowrap tw-text-sm">richtiges Muster:</h2>
+    <ng-container *ngFor="let waves of generatedWaveGroups">
+      <div
+        *ngIf="waves.length"
+        class="tw-flex tw-flex-wrap tw-border-b tw-border-neutral-900 tw-mb-14"
+      >
+        <p class="tw-w-full tw-text-transparent tw-mb-3">0</p>
+        <div
+          *ngFor="let grid of waves"
+          class="wave tw-grid tw-border tw-border-neutral-900 tw-mb-3 tw-mr-3"
+        >
+          <span
+            *ngFor="let invalidCamber of cambers"
+            class="tw-w-3 tw-h-3 tw-block tw-border tw-border-neutral-900 {{
+              getCellStatus(invalidCamber, grid)
+            }} "
+          >
+          </span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
