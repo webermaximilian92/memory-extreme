@@ -8,7 +8,6 @@ import { WavesService } from '../waves.service';
 })
 export class GameComponent implements OnInit {
   @Input() public generatedWaveGroups: number[][][] = [];
-  @Input() public resetGame: boolean = false;
   @Output() public resolve: EventEmitter<any> = new EventEmitter();
   @Output() public done: EventEmitter<any> = new EventEmitter();
 
@@ -28,6 +27,9 @@ export class GameComponent implements OnInit {
   _showSolver = false;
   _hideResolver = true;
   _sequenceActive = false;
+  _waveEnd = false;
+  _sequenceTime = 3;
+  _mainCounterTimer = 3;
 
   constructor(private wavesService: WavesService) {}
 
@@ -38,28 +40,22 @@ export class GameComponent implements OnInit {
   }
 
   enew() {
-    this.startGame();
+    this.start();
   }
 
   enext() {
     this.continueSequence();
-    this.showCounter(3);
+    this.showCounter(this._mainCounterTimer);
   }
 
-  showCounter(time: number, small: boolean = true) {
-    this._showCounter = true;
-    this._showMainCounter = !small;
-    this._timerSeconds = time;
-
-    const seconds = setInterval(() => {
-      this._timerSeconds--;
-    }, 1000);
-
+  start(easy: boolean = false) {
+    this.reset();
+    this._startGame = true;
+    this.showCounter(3, false);
+    // first sequence should be very slow
     setTimeout(() => {
-      clearInterval(seconds);
-      this._showCounter = false;
-      this._showMainCounter = false;
-    }, time * 1000);
+      this.continueSequence(false);
+    }, this._sequenceTime * 1000 + 2000);
   }
 
   reset() {
@@ -72,6 +68,7 @@ export class GameComponent implements OnInit {
     this._showSolver = false;
     this._hideResolver = true;
     this._sequenceActive = false;
+    this._waveEnd = false;
 
     // kill all timeouts
     var highestTimeoutId = setTimeout(';');
@@ -80,13 +77,8 @@ export class GameComponent implements OnInit {
     }
   }
 
-  startGame() {
-    this.reset();
-    this._startGame = true;
-    this.showCounter(3, false);
-    setTimeout(() => {
-      this.continueSequence();
-    }, 8000);
+  end() {
+    this.done.emit();
   }
 
   continueSequence(nextWave: boolean = false) {
@@ -100,7 +92,7 @@ export class GameComponent implements OnInit {
 
       setTimeout(() => {
         this.continueSequence();
-      }, 3000);
+      }, this._sequenceTime * 1000);
     } else if (this.currentIndexes[0] < ws.length) {
       this.showSolver(3);
     }
@@ -128,23 +120,24 @@ export class GameComponent implements OnInit {
       this.solverIndex = 0;
 
       if (this.currentIndexes[0] + 1 < this.generatedWaveGroups.length) {
-        this.nextWave();
+        this.endWave();
       } else {
         this.end();
       }
     }
   }
 
+  endWave() {
+    this._waveEnd = true;
+  }
+
   nextWave() {
+    this._waveEnd = false;
     this.currentIndexes[0] = this.currentIndexes[0] + 1;
     this.currentIndexes[1] = 0;
     setTimeout(() => {
       this.continueSequence();
-    }, 3000);
-  }
-
-  end() {
-    this.done.emit();
+    }, this._sequenceTime * 1000);
   }
 
   sendResolve() {
@@ -166,6 +159,22 @@ export class GameComponent implements OnInit {
     } else {
       this.resolvedCambers.push(camberIndex);
     }
+  }
+
+  showCounter(time: number, small: boolean = true) {
+    this._showCounter = true;
+    this._showMainCounter = !small;
+    this._timerSeconds = time;
+
+    const seconds = setInterval(() => {
+      this._timerSeconds--;
+    }, 1000);
+
+    setTimeout(() => {
+      clearInterval(seconds);
+      this._showCounter = false;
+      this._showMainCounter = false;
+    }, time * 1000);
   }
 
   isCurrentGridActive(iWaveGroup: number, iGrid: number) {

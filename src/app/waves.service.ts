@@ -5,9 +5,11 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class WavesService {
-  waveBaseCount = [2, 3, 3, 3, 4, 5]; // how many waves for each level (0xlevel1, 5xlevel3)
+  waveBaseCount = [3, 3, 4, 4, 4, 4, 5, 5, 5]; // how many waves for each level (0xlevel1, 5xlevel3)
+  easyWaveBaseCount = [2, 2, 2, 3, 3, 4]; // how many waves for each level (0xlevel1, 5xlevel3)
   marksPerGrid = 3; // number of possible camber marks inside a 9-grid
   waves: number[][][] = [];
+  easyWaves: number[][][] = [];
   resolved: number[][][] = [];
 
   public _subject = new BehaviorSubject<any>(false);

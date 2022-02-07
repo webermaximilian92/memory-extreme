@@ -8,7 +8,7 @@
   *ngIf="!_startGame"
   (click)="enew()"
   [disabled]="_showCounter"
-  class="tw-bg-teal-600 tw-p-3 tw-my-10 tw-mr-3 tw-text-yellow-50"
+  class="tw-bg-teal-600 tw-p-3 tw-my-10 tw-mr-3 tw-mb-32 tw-text-yellow-50"
 >
   Starten
 </button>
@@ -31,7 +31,7 @@
   </div>
 </div>
 
-<div *ngIf="!_showSolver && _startGame" class="tw-mb-12">
+<div *ngIf="!_showSolver && _startGame && !_waveEnd" class="tw-mb-12">
   <h2 class="tw-pt-16">Merke Dir folgende Muster:</h2>
   <p>
     Runde: {{ currentIndexes[0] + 1 }} / {{ generatedWaveGroups.length }}
@@ -69,7 +69,7 @@
   </ng-container>
 </div>
 
-<div *ngIf="_showSolver && _startGame" class="tw-mb-12">
+<div *ngIf="_showSolver && _startGame && !_waveEnd" class="tw-mb-12">
   <p class="tw-mt-32">Deine Lösung für Muster {{ solverIndex + 1 }}</p>
   <div
     class="wave tw-border tw-border-neutral-900 tw-mt-10 tw-inline-grid {{
@@ -89,4 +89,18 @@
       <span class="number number--small">{{ _timerSeconds }}</span>
     </div>
   </div>
+</div>
+
+<div *ngIf="_waveEnd" class="tw-mt-32 tw-mb-12">
+  <p>
+    Gut gemacht, weiter machen mit
+    {{ generatedWaveGroups[currentIndexes[0 + 1]].length }} Mustern?:
+  </p>
+  <button
+    *ngIf="_waveEnd"
+    (click)="nextWave()"
+    class="tw-bg-teal-600 tw-p-3 tw-mt-12 tw-mb-16 tw-text-yellow-50"
+  >
+    Nächste Runde {{ currentIndexes[0] + 2 }} / {{ generatedWaveGroups.length }}
+  </button>
 </div>
